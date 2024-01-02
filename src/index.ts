@@ -5,6 +5,8 @@ import { GetUserController } from "./controllers/get-users/get-users";
 import { MongoClient } from "./database/mongo";
 import { MongoCreateUserRepository } from "./repositeries/create-user/mongo-create-user";
 import { CreateUserController } from "./controllers/create-user/create-user";
+import { MongoUpdateUserRepositoty } from "./repositeries/update-user/mongo-update-user";
+import { UpdateUserController } from "./controllers/update-user/update-user";
 
 const main = async ()=>{
     
@@ -37,6 +39,18 @@ const main = async ()=>{
 
         res.status(statusCode).send(body)
     })
+
+    app.patch('/users/:id', async( req,res )=>{
+
+        const mongoUpdateUserRepositoty = new MongoUpdateUserRepositoty()
+
+        const updateUserController = new UpdateUserController(mongoUpdateUserRepositoty)
+
+        const { body, statusCode } = await updateUserController.update({body: req.body, params:req.params})
+
+        res.status(statusCode).send(body)
+    })
+
 
     const PORT = process.env.PORT || 7000
 

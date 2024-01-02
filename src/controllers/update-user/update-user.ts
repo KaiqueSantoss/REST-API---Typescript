@@ -1,26 +1,52 @@
-import { ObjectId } from "mongodb";
-import { MongoClient } from "../../database/mongo";
+import { HttpRequest, HttpResponse } from "../models/protocols";
 import { User } from "../models/users";
-import { IUpdateUserRepository, UpdateUserParams } from "./protocols";
+import { IUpdateUserController, UpdateUserParams, IUpdateUserRepository } from "./protocols";
+
+export class UpdateUserController implements IUpdateUserController{
+    constructor( private readonly UpdateUserRepository: IUpdateUserRepository){}
+   async update(httpRequest: HttpRequest<any>): Promise<HttpResponse<User>> {
 
 
-export class MongoUpdateUserRepositoty implements IUpdateUserRepository{
-    async updateUser(id: string, params: UpdateUserParams): Promise<User> {
-    
-        await MongoClient.db
-        .collection("users")
-        .updateOne({_id:new ObjectId(id)},{ $set:{...params}})
+    try {
         
-        const user = await MongoClient.db.collection<Omit<User, 'id'>>('users').findOne({_id: new ObjectId(id)})
-        if(!user){
-            throw new Error("User not updated")
+        const id = httpRequest?.params?.id;
+        const body = httpRequest?.body;
+
+        if(!id){
+            return{
+                statusCode:400,
+                body:'Missing user id'
+            }
         }
 
-       const { _id, ...rest} = user
+        const allowFieldsToUpdate:(keyof UpdateUserParams)[] = [ 'firstName' , 'lastName', 'password']
 
-       return{
-        id: _id.toHexString(), ...rest
-       }
+        const someFieldIsNotAllowedToUpdate = Object.keys(body).some(key=> !allowFieldsToUpdate
+            .includes( key as keyof UpdateUserParams))
+
+            if(someFieldIsNotAllowedToUpdate){
+                return{
+                    statusCode:400,
+                    body:'Some received field is not allowed '
+                }
+            }
+
+
+            const user = await this.UpdateUserRepository.updateUser(id,body);
+
+            return{
+                statusCode:200,
+                body:user
+            }
+
+    } catch (error) {
+        return{
+            statusCode:400,
+            body:"Somithing went wrog."
+        }
     }
 
+
     }
+
+}
