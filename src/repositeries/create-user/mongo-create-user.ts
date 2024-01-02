@@ -1,9 +1,9 @@
-import { ICreateUserParams, ICreateUserRepository } from "../../controllers/create-user/protocols";
+import { CreateUserParams, ICreateUserRepository } from "../../controllers/create-user/protocols";
 import { User } from "../../controllers/models/users";
 import { MongoClient } from "../../database/mongo";
 
-export class MongoCreateUser implements ICreateUserRepository{
-   async createUser(params: ICreateUserParams): Promise<User> {
+export class MongoCreateUserRepository implements ICreateUserRepository{
+   async createUser(params: CreateUserParams): Promise<User> {
 
    const { insertedId}  = await MongoClient.db.collection('users').insertOne(params)
    
