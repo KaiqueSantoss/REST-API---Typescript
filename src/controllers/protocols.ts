@@ -1,8 +1,7 @@
-import { User } from "../models/users";
 
 export interface HttpResponse<T>{
     statusCode:number;
-    body: T | string
+    body: T;
 }
 
 export interface HttpRequest<B>{
