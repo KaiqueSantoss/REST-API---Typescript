@@ -48,7 +48,7 @@ const main = async ()=>{
 
         const updateUserController = new UpdateUserController(mongoUpdateUserRepositoty)
 
-        const { body, statusCode } = await updateUserController.update({body: req.body, params:req.params})
+        const { body, statusCode } = await updateUserController.handle({body: req.body, params:req.params})
 
         res.status(statusCode).send(body)
     })

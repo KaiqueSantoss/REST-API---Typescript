@@ -1,6 +1,6 @@
 import { ObjectId } from "mongodb";
 import { MongoClient } from "../../database/mongo";
-import { User } from "../../controllers/models/users";
+import { User } from "../../models/users";
 import { IUpdateUserRepository, UpdateUserParams } from "../../controllers/update-user/protocols";
 
 

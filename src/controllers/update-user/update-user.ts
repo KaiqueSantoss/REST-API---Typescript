@@ -1,10 +1,10 @@
-import { HttpRequest, HttpResponse } from "../models/protocols";
-import { User } from "../models/users";
-import { IUpdateUserController, UpdateUserParams, IUpdateUserRepository } from "./protocols";
+import { HttpRequest, HttpResponse, IController } from "../protocols";
+import { User } from "../../models/users";
+import { UpdateUserParams, IUpdateUserRepository } from "./protocols";
 
-export class UpdateUserController implements IUpdateUserController{
+export class UpdateUserController implements IController{
     constructor( private readonly UpdateUserRepository: IUpdateUserRepository){}
-   async update(httpRequest: HttpRequest<any>): Promise<HttpResponse<User>> {
+   async handle(httpRequest: HttpRequest<UpdateUserParams>): Promise<HttpResponse<User>> {
 
 
     try {
@@ -16,6 +16,13 @@ export class UpdateUserController implements IUpdateUserController{
             return{
                 statusCode:400,
                 body:'Missing user id'
+            }
+        }
+
+        if(!body){
+            return{
+                statusCode:400,
+                body:'Missing user body'
             }
         }
 
