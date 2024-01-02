@@ -6,5 +6,5 @@ export interface IGetUsersController{
 }
 
 export interface IGetUserRepository{
-    getUser():Promise<User[]>
+    getUsers():Promise<User[]>
 }
